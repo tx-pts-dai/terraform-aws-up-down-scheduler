@@ -16,7 +16,7 @@ data "archive_file" "lambda_asg" {
 }
 
 resource "aws_lambda_function" "lambda_asg" {
-  count            = var.asg_scheduler != {} ? 1 : 0
+  count            = var.asg_scheduler.asg_name != "" ? 1 : 0
   function_name    = "ec2-asg-scheduler-${random_integer.random_number.result}"
   filename         = data.archive_file.lambda_asg[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_asg[0].output_path)
@@ -27,14 +27,14 @@ resource "aws_lambda_function" "lambda_asg" {
 
 
 resource "aws_cloudwatch_event_rule" "asg_downscale_scheduler_event" {
-  count               = var.asg_scheduler != {} ? 1 : 0
+  count               = var.asg_scheduler.asg_name != "" ? 1 : 0
   name                = "asg-scheduler-downscale-event-${random_integer.random_number.result}"
   description         = "Event rule for ASG downscale scheduler"
   schedule_expression = var.asg_scheduler.downscale_cron_expression
 }
 
 resource "aws_cloudwatch_event_target" "asg_downscale_scheduler_target" {
-  count     = var.asg_scheduler != {} ? 1 : 0
+  count     = var.asg_scheduler.asg_name != "" ? 1 : 0
   rule      = aws_cloudwatch_event_rule.asg_downscale_scheduler_event[0].name
   target_id = aws_lambda_function.lambda_asg[0].function_name
   arn       = aws_lambda_function.lambda_asg[0].arn
@@ -45,14 +45,14 @@ resource "aws_cloudwatch_event_target" "asg_downscale_scheduler_target" {
 }
 
 resource "aws_cloudwatch_event_rule" "asg_upscale_scheduler_event" {
-  count               = var.asg_scheduler != {} ? 1 : 0
+  count               = var.asg_scheduler.asg_name != "" ? 1 : 0
   name                = "asg-scheduler-upsacale-event-${random_integer.random_number.result}"
   description         = "Event rule for ASG upscale scheduler"
   schedule_expression = var.asg_scheduler.upscale_cron_expression
 }
 
 resource "aws_cloudwatch_event_target" "asg_upscale_scheduler_target" {
-  count     = var.asg_scheduler != {} ? 1 : 0
+  count     = var.asg_scheduler.asg_name != "" ? 1 : 0
   rule      = aws_cloudwatch_event_rule.asg_upscale_scheduler_event[0].name
   target_id = aws_lambda_function.lambda_asg[0].function_name
   arn       = aws_lambda_function.lambda_asg[0].arn
@@ -63,14 +63,14 @@ resource "aws_cloudwatch_event_target" "asg_upscale_scheduler_target" {
 }
 
 data "archive_file" "lambda_ec2_stop" {
-  count       = var.ec2_stop_scheduler != {} ? 1 : 0
+  count       = var.ec2_stop_scheduler.cron_expression != "" ? 1 : 0
   type        = "zip"
   source_dir  = "${path.module}/lambda/ec2_simple/stop"
   output_path = "${path.module}/lambda/ec2_simple/stop/package.zip"
 }
 
 resource "aws_lambda_function" "lambda_ec2_stop" {
-  count            = var.ec2_stop_scheduler != {} ? 1 : 0
+  count            = var.ec2_stop_scheduler.cron_expression != "" ? 1 : 0
   function_name    = "ec2-stop-scheduler-${random_integer.random_number.result}"
   filename         = data.archive_file.lambda_ec2_stop[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_ec2_stop[0].output_path)
@@ -80,14 +80,14 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_stop_scheduler_event" {
-  count               = var.ec2_stop_scheduler != {} ? 1 : 0
+  count               = var.ec2_stop_scheduler.cron_expression != "" ? 1 : 0
   name                = "ec2-start-scheduler-event-${random_integer.random_number.result}"
   description         = "Event rule for EC2 stop scheduler"
   schedule_expression = var.ec2_stop_scheduler.cron_expression
 }
 
 resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
-  count     = var.ec2_stop_scheduler != {} ? 1 : 0
+  count     = var.ec2_stop_scheduler.cron_expression != "" ? 1 : 0
   rule      = aws_cloudwatch_event_rule.ec2_stop_scheduler_event[0].name
   target_id = aws_lambda_function.lambda_ec2_stop[0].function_name
   arn       = aws_lambda_function.lambda_ec2_stop[0].arn
@@ -97,14 +97,14 @@ resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
 }
 
 data "archive_file" "lambda_ec2_start" {
-  count       = var.ec2_start_scheduler != {} ? 1 : 0
+  count       = var.ec2_start_scheduler.cron_expression != "" ? 1 : 0
   type        = "zip"
   source_dir  = "${path.module}/lambda/ec2_simple/start"
   output_path = "${path.module}/lambda/ec2_simple/start/package.zip"
 }
 
 resource "aws_lambda_function" "lambda_ec2_start" {
-  count            = var.ec2_start_scheduler != {} ? 1 : 0
+  count            = var.ec2_start_scheduler.cron_expression != "" ? 1 : 0
   function_name    = "ec2-start-scheduler-${random_integer.random_number.result}"
   filename         = data.archive_file.lambda_ec2_start[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_ec2_start[0].output_path)
@@ -114,14 +114,14 @@ resource "aws_lambda_function" "lambda_ec2_start" {
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_start_scheduler_event" {
-  count               = var.ec2_start_scheduler != {} ? 1 : 0
+  count               = var.ec2_start_scheduler.cron_expression != "" ? 1 : 0
   name                = "ec2-start-scheduler-event-${random_integer.random_number.result}"
   description         = "Event rule for EC2 start scheduler"
   schedule_expression = var.ec2_start_scheduler.cron_expression
 }
 
 resource "aws_cloudwatch_event_target" "ec2_start_scheduler_target" {
-  count     = var.ec2_start_scheduler != {} ? 1 : 0
+  count     = var.ec2_start_scheduler.cron_expression != "" ? 1 : 0
   rule      = aws_cloudwatch_event_rule.ec2_start_scheduler_event[0].name
   target_id = aws_lambda_function.lambda_ec2_start[0].function_name
   arn       = aws_lambda_function.lambda_ec2_start[0].arn

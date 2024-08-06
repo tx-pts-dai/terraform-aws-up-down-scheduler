@@ -30,7 +30,7 @@ resource "aws_cloudwatch_event_rule" "asg_downscale_scheduler_event" {
   count               = var.asg_scheduler != {} ? 1 : 0
   name                = "asg-scheduler-downscale-event-${random_integer.random_number.result}"
   description         = "Event rule for ASG downscale scheduler"
-  schedule_expression = var.asg_scheduler.downscale_cron_expression
+  schedule_expression = var.asg_scheduler[0].downscale_cron_expression
 }
 
 resource "aws_cloudwatch_event_target" "asg_downscale_scheduler_target" {
@@ -39,8 +39,8 @@ resource "aws_cloudwatch_event_target" "asg_downscale_scheduler_target" {
   target_id = aws_lambda_function.lambda_asg[0].function_name
   arn       = aws_lambda_function.lambda_asg[0].arn
   input = jsonencode({
-    asg_name         = var.asg_scheduler.asg_name
-    desired_capacity = var.asg_scheduler.downscale_desired_capacity
+    asg_name         = var.asg_scheduler[0].asg_name
+    desired_capacity = var.asg_scheduler[0].downscale_desired_capacity
   })
 }
 
@@ -57,8 +57,8 @@ resource "aws_cloudwatch_event_target" "asg_upscale_scheduler_target" {
   target_id = aws_lambda_function.lambda_asg[0].function_name
   arn       = aws_lambda_function.lambda_asg[0].arn
   input = jsonencode({
-    asg_name         = var.asg_scheduler.asg_name
-    desired_capacity = var.asg_scheduler.upscale_desired_capacity
+    asg_name         = var.asg_scheduler[0].asg_name
+    desired_capacity = var.asg_scheduler[0].upscale_desired_capacity
   })
 }
 
@@ -83,7 +83,7 @@ resource "aws_cloudwatch_event_rule" "ec2_stop_scheduler_event" {
   count               = var.ec2_stop_scheduler != {} ? 1 : 0
   name                = "ec2-start-scheduler-event-${random_integer.random_number.result}"
   description         = "Event rule for EC2 stop scheduler"
-  schedule_expression = var.ec2_stop_scheduler.cron_expression
+  schedule_expression = var.ec2_stop_scheduler[0].cron_expression
 }
 
 resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
@@ -92,7 +92,7 @@ resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
   target_id = aws_lambda_function.lambda_ec2_stop[0].function_name
   arn       = aws_lambda_function.lambda_ec2_stop[0].arn
   input = jsonencode({
-    instance_ids = var.ec2_stop_scheduler.instance_ids
+    instance_ids = var.ec2_stop_scheduler[0].instance_ids
   })
 }
 
@@ -117,7 +117,7 @@ resource "aws_cloudwatch_event_rule" "ec2_start_scheduler_event" {
   count               = var.ec2_start_scheduler != {} ? 1 : 0
   name                = "ec2-start-scheduler-event-${random_integer.random_number.result}"
   description         = "Event rule for EC2 start scheduler"
-  schedule_expression = var.ec2_start_scheduler.cron_expression
+  schedule_expression = var.ec2_start_scheduler[0].cron_expression
 }
 
 resource "aws_cloudwatch_event_target" "ec2_start_scheduler_target" {
@@ -126,7 +126,7 @@ resource "aws_cloudwatch_event_target" "ec2_start_scheduler_target" {
   target_id = aws_lambda_function.lambda_ec2_start[0].function_name
   arn       = aws_lambda_function.lambda_ec2_start[0].arn
   input = jsonencode({
-    instance_ids = var.ec2_start_scheduler.instance_ids
+    instance_ids = var.ec2_start_scheduler[0].instance_ids
   })
 }
 

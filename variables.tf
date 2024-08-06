@@ -7,7 +7,6 @@ variable "asg_scheduler" {
     upscale_desired_capacity   = number
     asg_name                   = string
   })
-  default = {}
 }
 
 variable "ec2_stop_scheduler" {
@@ -16,7 +15,6 @@ variable "ec2_stop_scheduler" {
     cron_expression = string
     instance_ids    = list(string)
   })
-  default = {}
 }
 
 variable "ec2_start_scheduler" {
@@ -25,5 +23,4 @@ variable "ec2_start_scheduler" {
     cron_expression = string
     instance_ids    = list(string)
   })
-  default = {}
 }

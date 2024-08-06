@@ -48,7 +48,7 @@ resource "aws_cloudwatch_event_rule" "asg_upscale_scheduler_event" {
   count               = var.asg_scheduler != {} ? 1 : 0
   name                = "asg-scheduler-upsacale-event-${random_integer.random_number.result}"
   description         = "Event rule for ASG upscale scheduler"
-  schedule_expression = var.asg_scheduler["upscale_cron_expression"]
+  schedule_expression = var.asg_scheduler[0].upscale_cron_expression
 }
 
 resource "aws_cloudwatch_event_target" "asg_upscale_scheduler_target" {

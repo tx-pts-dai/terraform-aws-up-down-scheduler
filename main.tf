@@ -11,7 +11,7 @@ terraform {
 data "archive_file" "lambda_asg" {
   count       = var.asg_scheduler != {} ? 1 : 0
   type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_asg/update_capacity/main.py"
+  source_dir  = "${path.module}/lambda/ec2_asg/update_capacity"
   output_path = "${path.module}/lambda/ec2_asg/update_capacity/package.zip"
 }
 
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_event_target" "asg_upscale_scheduler_target" {
 data "archive_file" "lambda_ec2_stop" {
   count       = var.ec2_stop_scheduler != {} ? 1 : 0
   type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_simple/stop/main.py"
+  source_dir  = "${path.module}/lambda/ec2_simple/stop"
   output_path = "${path.module}/lambda/ec2_simple/stop/package.zip"
 }
 
@@ -99,7 +99,7 @@ resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
 data "archive_file" "lambda_ec2_start" {
   count       = var.ec2_start_scheduler != {} ? 1 : 0
   type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_simple/start/main.py"
+  source_dir  = "${path.module}/lambda/ec2_simple/start"
   output_path = "${path.module}/lambda/ec2_simple/start/package.zip"
 }
 

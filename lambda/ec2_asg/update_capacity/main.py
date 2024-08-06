@@ -15,4 +15,7 @@ def lambda_handler(event, context):
         }
     except Exception as e:
         print(f"Error updating capacity of autoscaling group {asg_name}: {str(e)}")
-        return {"statusCode": 500, "body": f"Error updating desired capacity: {str(e)}"}
+        return {
+            "statusCode": 500,
+            "body": f"Error updating desired capacity: {str(e)}",
+        }

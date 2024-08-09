@@ -16,6 +16,10 @@ terraform {
   }
 }
 
+locals {
+  create_basic_resources = var.ec2_start_scheduler != null || var.ec2_stop_scheduler != null || var.asg_scheduler != null
+}
+
 data "archive_file" "lambda_asg" {
   count       = var.asg_scheduler != null ? 1 : 0
   type        = "zip"
@@ -54,7 +58,7 @@ resource "aws_cloudwatch_event_target" "asg_downscale_scheduler_target" {
 
 resource "aws_cloudwatch_event_rule" "asg_upscale_scheduler_event" {
   count               = var.asg_scheduler != null ? 1 : 0
-  name                = "asg-scheduler-upsacale-event-${random_id.this[0].id}"
+  name                = "asg-scheduler-upscale-event-${random_id.this[0].id}"
   description         = "Event rule for ASG upscale scheduler"
   schedule_expression = var.asg_scheduler.upscale_cron_expression
 }
@@ -139,20 +143,12 @@ resource "aws_cloudwatch_event_target" "ec2_start_scheduler_target" {
 }
 
 resource "random_id" "this" {
-  count = (
-    var.ec2_start_scheduler != null ||
-    var.ec2_stop_scheduler != null ||
-    var.asg_scheduler != null
-  ) ? 1 : 0
+  count       = local.create_basic_resources ? 1 : 0
   byte_length = 4
 }
 
 resource "aws_iam_role" "lambda_role" {
-  count = (
-    var.ec2_start_scheduler != null ||
-    var.ec2_stop_scheduler != null ||
-    var.asg_scheduler != null
-  ) ? 1 : 0
+  count              = local.create_basic_resources ? 1 : 0
   name               = "ec2-scheduler-role-${random_id.this[0].id}"
   assume_role_policy = data.aws_iam_policy_document.lambda_role_policy.json
 }
@@ -188,21 +184,13 @@ data "aws_iam_policy_document" "ec2_scheduler_policy" {
 }
 
 resource "aws_iam_policy" "ec2_scheduler_policy" {
-  count = (
-    var.ec2_start_scheduler != null ||
-    var.ec2_stop_scheduler != null ||
-    var.asg_scheduler != null
-  ) ? 1 : 0
+  count  = local.create_basic_resources ? 1 : 0
   name   = "ec2-scheduler-${random_id.this[0].id}"
   policy = data.aws_iam_policy_document.ec2_scheduler_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
-  count = (
-    var.ec2_start_scheduler != null ||
-    var.ec2_stop_scheduler != null ||
-    var.asg_scheduler != null
-  ) ? 1 : 0
+  count      = local.create_basic_resources ? 1 : 0
   role       = aws_iam_role.lambda_role[0].name
   policy_arn = aws_iam_policy.ec2_scheduler_policy[0].arn
 }

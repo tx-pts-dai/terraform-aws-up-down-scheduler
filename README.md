@@ -107,7 +107,7 @@ No modules.
 | [aws_lambda_function.lambda_asg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
 | [aws_lambda_function.lambda_ec2_start](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
 | [aws_lambda_function.lambda_ec2_stop](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
-| [random_integer.random_number](https://registry.terraform.io/providers/hashicorp/random/3.6.2/docs/resources/integer) | resource |
+| [random_id.this](https://registry.terraform.io/providers/hashicorp/random/3.6.2/docs/resources/id) | resource |
 | [archive_file.lambda_asg](https://registry.terraform.io/providers/hashicorp/archive/2.5.0/docs/data-sources/file) | data source |
 | [archive_file.lambda_ec2_start](https://registry.terraform.io/providers/hashicorp/archive/2.5.0/docs/data-sources/file) | data source |
 | [archive_file.lambda_ec2_stop](https://registry.terraform.io/providers/hashicorp/archive/2.5.0/docs/data-sources/file) | data source |

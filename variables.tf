@@ -7,13 +7,7 @@ variable "asg_scheduler" {
     upscale_desired_capacity   = number
     asg_name                   = string
   })
-  default = {
-    asg_name                   = ""
-    downscale_cron_expression  = ""
-    downscale_desired_capacity = 1
-    upscale_cron_expression    = ""
-    upscale_desired_capacity   = 2
-  }
+  default = null
 }
 
 variable "ec2_stop_scheduler" {
@@ -22,10 +16,7 @@ variable "ec2_stop_scheduler" {
     cron_expression = string
     instance_ids    = list(string)
   })
-  default = {
-    cron_expression = ""
-    instance_ids    = []
-  }
+  default = null
 }
 
 variable "ec2_start_scheduler" {
@@ -34,8 +25,5 @@ variable "ec2_start_scheduler" {
     cron_expression = string
     instance_ids    = list(string)
   })
-  default = {
-    cron_expression = ""
-    instance_ids    = []
-  }
+  default = null
 }

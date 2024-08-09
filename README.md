@@ -1,54 +1,42 @@
-# < This section can be removed >
+# Up Down scheduler
 
-Official doc for public modules [hashicorp](https://developer.hashicorp.com/terraform/registry/modules/publish)
-
-Repo structure:
-
-```
-├── README.md
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── ...
-├── modules/
-│   ├── nestedA/
-│   │   ├── README.md
-│   │   ├── variables.tf
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   ├── nestedB/
-│   ├── .../
-├── examples/
-│   ├── exampleA/
-│   │   ├── main.tf
-│   ├── exampleB/
-│   ├── .../
-```
-
-# My Terraform Module
-
-< module description >
+This Terraform module automates the scheduling of AWS Auto Scaling Group (ASG) scaling events and the start/stop scheduling of EC2 instances using AWS Lambda and Amazon CloudWatch Events. The module is designed to optimize resource management by automatically adjusting ASG capacities and controlling EC2 instance states based on predefined schedules.
 
 ## Usage
 
-< describe the module minimal code required for a deployment >
+You can use the module two ways:
 
 ```hcl
-module "my_module_example" {
+module "ec2_start_stop_app_with_asg" {
+  source        = "github.com/tx-pts-dai/terraform-aws-up-down-scheduler"
+  version       = "~> 1.0"
+  asg_scheduler = {
+    downscale_cron_expression  = "0 17 * * MON-FRI"
+    downscale_desired_capacity = 1
+    upscale_cron_expression    = "0 8 * * MON-FRI"
+    upscale_desired_capacity   = 2
+    asg_name                   = "My-ASG-APP"
+  }
+}
+
+module "ec2_start_stop_app_without_asg" {
+  source              = "github.com/tx-pts-dai/terraform-aws-up-down-scheduler"
+  version             = "~> 1.0"
+  ec2_stop_scheduler  = {
+    cron_expression = "0 17 * * MON-FRI"
+    instance_ids    = ["i-xxxxxxxxxxxxx"]
+  }
+  ec2_start_scheduler = {
+    cron_expression = "0 8 * * MON-FRI"
+    instance_ids    = ["i-xxxxxxxxxxxxx"]
+  }
 }
 ```
 
 ## Explanation and description of interesting use-cases
 
-< create a h2 chapter for each section explaining special module concepts >
-
-## Examples
-
-< if the folder `examples/` exists, put here the link to the examples subfolders with their descriptions >
-
-## Contributing
-
-< issues and contribution guidelines for public modules >
+## Save money !
+Don't spend useless money when your workloads are not used or are in stand by anyway. A good use case is stopping dev services during the night or scale less instances on internal applications that are accessed only during the day anyway.
 
 ### Pre-Commit
 

@@ -35,7 +35,7 @@ resource "aws_lambda_function" "lambda_asg" {
   handler          = "main.lambda_handler"
   runtime          = "python3.8"
   role             = aws_iam_role.lambda_role[0].arn
-  timeout          = 15
+  timeout          = 30
 }
 
 
@@ -90,7 +90,7 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
   handler          = "main.lambda_handler"
   runtime          = "python3.8"
   role             = aws_iam_role.lambda_role[0].arn
-  timeout          = 15
+  timeout          = 30
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_stop_scheduler_event" {
@@ -125,7 +125,7 @@ resource "aws_lambda_function" "lambda_ec2_start" {
   handler          = "main.lambda_handler"
   runtime          = "python3.8"
   role             = aws_iam_role.lambda_role[0].arn
-  timeout          = 15
+  timeout          = 30
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_start_scheduler_event" {

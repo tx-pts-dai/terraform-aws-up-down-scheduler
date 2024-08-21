@@ -199,19 +199,19 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
 }
 
 resource "aws_cloudwatch_log_group" "lambda_asg_log_group" {
-  count = var.asg_scheduler != null ? 1 : 0
-  name  = "/aws/lambda/ec2-asg-scheduler-${random_id.this[0].id}"
-  retention_in_days = 14  
+  count             = var.asg_scheduler != null ? 1 : 0
+  name              = "/aws/lambda/ec2-asg-scheduler-${random_id.this[0].id}"
+  retention_in_days = 14
 }
 
 resource "aws_cloudwatch_log_group" "lambda_ec2_stop_log_group" {
-  count = var.ec2_stop_scheduler != null ? 1 : 0
-  name  = "/aws/lambda/ec2-stop-scheduler-${random_id.this[0].id}"
-  retention_in_days = 14  
+  count             = var.ec2_stop_scheduler != null ? 1 : 0
+  name              = "/aws/lambda/ec2-stop-scheduler-${random_id.this[0].id}"
+  retention_in_days = 14
 }
 
 resource "aws_cloudwatch_log_group" "lambda_ec2_start_log_group" {
-  count = var.ec2_start_scheduler != null ? 1 : 0
-  name  = "/aws/lambda/ec2-start-scheduler-${random_id.this[0].id}"
-  retention_in_days = 14  
+  count             = var.ec2_start_scheduler != null ? 1 : 0
+  name              = "/aws/lambda/ec2-start-scheduler-${random_id.this[0].id}"
+  retention_in_days = 14
 }

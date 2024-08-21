@@ -35,6 +35,7 @@ resource "aws_lambda_function" "lambda_asg" {
   handler          = "main.lambda_handler"
   runtime          = "python3.8"
   role             = aws_iam_role.lambda_role[0].arn
+  timeout          = 15
 }
 
 
@@ -89,6 +90,7 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
   handler          = "main.lambda_handler"
   runtime          = "python3.8"
   role             = aws_iam_role.lambda_role[0].arn
+  timeout          = 15
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_stop_scheduler_event" {
@@ -123,6 +125,7 @@ resource "aws_lambda_function" "lambda_ec2_start" {
   handler          = "main.lambda_handler"
   runtime          = "python3.8"
   role             = aws_iam_role.lambda_role[0].arn
+  timeout          = 15
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_start_scheduler_event" {
@@ -193,4 +196,22 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
   count      = local.create_basic_resources ? 1 : 0
   role       = aws_iam_role.lambda_role[0].name
   policy_arn = aws_iam_policy.ec2_scheduler_policy[0].arn
+}
+
+resource "aws_cloudwatch_log_group" "lambda_asg_log_group" {
+  count = var.asg_scheduler != null ? 1 : 0
+  name  = "/aws/lambda/ec2-asg-scheduler-${random_id.this[0].id}"
+  retention_in_days = 14  
+}
+
+resource "aws_cloudwatch_log_group" "lambda_ec2_stop_log_group" {
+  count = var.ec2_stop_scheduler != null ? 1 : 0
+  name  = "/aws/lambda/ec2-stop-scheduler-${random_id.this[0].id}"
+  retention_in_days = 14  
+}
+
+resource "aws_cloudwatch_log_group" "lambda_ec2_start_log_group" {
+  count = var.ec2_start_scheduler != null ? 1 : 0
+  name  = "/aws/lambda/ec2-start-scheduler-${random_id.this[0].id}"
+  retention_in_days = 14  
 }

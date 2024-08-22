@@ -3,9 +3,10 @@ import boto3
 def lambda_handler(event, context):
     desired_capacity = event["desired_capacity"]
     asg_name = event["asg_name"]
-    ec2_client = boto3.client("ec2")
+    asg_client = boto3.client("autoscaling")
+
     try:
-        response = ec2_client.update_auto_scaling_group(
+        response = asg_client.update_auto_scaling_group(
             AutoScalingGroupName=asg_name, DesiredCapacity=desired_capacity
         )
         print(response)

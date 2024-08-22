@@ -115,7 +115,9 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_debug_ec2_scheduler"></a> [debug\_ec2\_scheduler](#output\_debug\_ec2\_scheduler) | scheduler ec2 |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors

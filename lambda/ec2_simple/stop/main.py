@@ -8,12 +8,12 @@ def lambda_handler(event, context):
         print(response)
         return {
             "statusCode": 200,
-            "body": f"Successfully stopped instance {instance_ids}",
+            "body": f"Successfully stopped instances {instance_ids}",
             "response": response,
         }
     except Exception as e:
-        print(f"Error stopping instance {instance_ids}: {str(e)}")
+        print(f"Error stopping instances {instance_ids}: {str(e)}")
         return {
             "statusCode": 500,
-            "body": f"Error stopping instance {instance_ids}: {str(e)}",
+            "body": f"Error stopping instances {instance_ids}: {str(e)}",
         }

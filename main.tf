@@ -46,6 +46,14 @@ resource "aws_cloudwatch_event_rule" "asg_downscale_scheduler_event" {
   schedule_expression = var.asg_scheduler.downscale_cron_expression
 }
 
+resource "aws_lambda_permission" "allow_asg_downscale" {
+  count         = var.asg_scheduler != null ? 1 : 0
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_asg[0].function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.asg_downscale_scheduler_event[0].arn
+}
+
 resource "aws_cloudwatch_event_target" "asg_downscale_scheduler_target" {
   count     = var.asg_scheduler != null ? 1 : 0
   rule      = aws_cloudwatch_event_rule.asg_downscale_scheduler_event[0].name
@@ -62,6 +70,14 @@ resource "aws_cloudwatch_event_rule" "asg_upscale_scheduler_event" {
   name                = "asg-scheduler-upscale-event-${random_id.this[0].id}"
   description         = "Event rule for ASG upscale scheduler"
   schedule_expression = var.asg_scheduler.upscale_cron_expression
+}
+
+resource "aws_lambda_permission" "allow_asg_upscale" {
+  count         = var.asg_scheduler != null ? 1 : 0
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_asg[0].function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.asg_upscale_scheduler_event[0].arn
 }
 
 resource "aws_cloudwatch_event_target" "asg_upscale_scheduler_target" {
@@ -100,6 +116,14 @@ resource "aws_cloudwatch_event_rule" "ec2_stop_scheduler_event" {
   schedule_expression = var.ec2_stop_scheduler.cron_expression
 }
 
+resource "aws_lambda_permission" "allow_ec2_stop" {
+  count         = var.ec2_stop_scheduler != null ? 1 : 0
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_ec2_stop[0].function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.ec2_stop_scheduler_event[0].arn
+}
+
 resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
   count     = var.ec2_stop_scheduler != null ? 1 : 0
   rule      = aws_cloudwatch_event_rule.ec2_stop_scheduler_event[0].name
@@ -133,6 +157,14 @@ resource "aws_cloudwatch_event_rule" "ec2_start_scheduler_event" {
   name                = "ec2-start-scheduler-event-${random_id.this[0].id}"
   description         = "Event rule for EC2 start scheduler"
   schedule_expression = var.ec2_start_scheduler.cron_expression
+}
+
+resource "aws_lambda_permission" "allow_ec2_start" {
+  count         = var.ec2_start_scheduler != null ? 1 : 0
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_ec2_start[0].function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.ec2_start_scheduler_event[0].arn
 }
 
 resource "aws_cloudwatch_event_target" "ec2_start_scheduler_target" {

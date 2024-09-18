@@ -44,7 +44,7 @@ resource "aws_cloudwatch_event_rule" "asg_downscale_scheduler_event" {
   name                         = "asg-scheduler-downscale-event-${random_id.this[0].id}"
   description                  = "Event rule for ASG downscale scheduler"
   schedule_expression          = var.asg_scheduler.downscale_cron_expression
-  schedule_expression_timezone = "Switzerland/Zurich"
+  schedule_expression_timezone = "Europe/Zurich"
 }
 
 resource "aws_lambda_permission" "allow_asg_downscale" {
@@ -71,7 +71,7 @@ resource "aws_cloudwatch_event_rule" "asg_upscale_scheduler_event" {
   name                         = "asg-scheduler-upscale-event-${random_id.this[0].id}"
   description                  = "Event rule for ASG upscale scheduler"
   schedule_expression          = var.asg_scheduler.upscale_cron_expression
-  schedule_expression_timezone = "Switzerland/Zurich"
+  schedule_expression_timezone = "Europe/Zurich"
 }
 
 resource "aws_lambda_permission" "allow_asg_upscale" {
@@ -116,7 +116,7 @@ resource "aws_cloudwatch_event_rule" "ec2_stop_scheduler_event" {
   name                         = "ec2-stop-scheduler-event-${random_id.this[0].id}"
   description                  = "Event rule for EC2 stop scheduler"
   schedule_expression          = var.ec2_stop_scheduler.cron_expression
-  schedule_expression_timezone = "Switzerland/Zurich"
+  schedule_expression_timezone = "Europe/Zurich"
 }
 
 resource "aws_lambda_permission" "allow_ec2_stop" {
@@ -160,7 +160,7 @@ resource "aws_cloudwatch_event_rule" "ec2_start_scheduler_event" {
   name                         = "ec2-start-scheduler-event-${random_id.this[0].id}"
   description                  = "Event rule for EC2 start scheduler"
   schedule_expression          = var.ec2_start_scheduler.cron_expression
-  schedule_expression_timezone = "Switzerland/Zurich"
+  schedule_expression_timezone = "Europe/Zurich"
 }
 
 resource "aws_lambda_permission" "allow_ec2_start" {

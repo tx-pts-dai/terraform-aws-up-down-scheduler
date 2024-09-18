@@ -110,10 +110,11 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_stop_scheduler_event" {
-  count               = var.ec2_stop_scheduler != null ? 1 : 0
-  name                = "ec2-stop-scheduler-event-${random_id.this[0].id}"
-  description         = "Event rule for EC2 stop scheduler"
-  schedule_expression = var.ec2_stop_scheduler.cron_expression
+  count                        = var.ec2_stop_scheduler != null ? 1 : 0
+  name                         = "ec2-stop-scheduler-event-${random_id.this[0].id}"
+  description                  = "Event rule for EC2 stop scheduler"
+  schedule_expression          = var.ec2_stop_scheduler.cron_expression
+  schedule_expression_timezone = "Switzerland/Zurich"
 }
 
 resource "aws_lambda_permission" "allow_ec2_stop" {
@@ -153,10 +154,11 @@ resource "aws_lambda_function" "lambda_ec2_start" {
 }
 
 resource "aws_cloudwatch_event_rule" "ec2_start_scheduler_event" {
-  count               = var.ec2_start_scheduler != null ? 1 : 0
-  name                = "ec2-start-scheduler-event-${random_id.this[0].id}"
-  description         = "Event rule for EC2 start scheduler"
-  schedule_expression = var.ec2_start_scheduler.cron_expression
+  count                        = var.ec2_start_scheduler != null ? 1 : 0
+  name                         = "ec2-start-scheduler-event-${random_id.this[0].id}"
+  description                  = "Event rule for EC2 start scheduler"
+  schedule_expression          = var.ec2_start_scheduler.cron_expression
+  schedule_expression_timezone = "Switzerland/Zurich"
 }
 
 resource "aws_lambda_permission" "allow_ec2_start" {

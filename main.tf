@@ -40,10 +40,11 @@ resource "aws_lambda_function" "lambda_asg" {
 
 
 resource "aws_cloudwatch_event_rule" "asg_downscale_scheduler_event" {
-  count               = var.asg_scheduler != null ? 1 : 0
-  name                = "asg-scheduler-downscale-event-${random_id.this[0].id}"
-  description         = "Event rule for ASG downscale scheduler"
-  schedule_expression = var.asg_scheduler.downscale_cron_expression
+  count                        = var.asg_scheduler != null ? 1 : 0
+  name                         = "asg-scheduler-downscale-event-${random_id.this[0].id}"
+  description                  = "Event rule for ASG downscale scheduler"
+  schedule_expression          = var.asg_scheduler.downscale_cron_expression
+  schedule_expression_timezone = "Switzerland/Zurich"
 }
 
 resource "aws_lambda_permission" "allow_asg_downscale" {
@@ -66,10 +67,11 @@ resource "aws_cloudwatch_event_target" "asg_downscale_scheduler_target" {
 }
 
 resource "aws_cloudwatch_event_rule" "asg_upscale_scheduler_event" {
-  count               = var.asg_scheduler != null ? 1 : 0
-  name                = "asg-scheduler-upscale-event-${random_id.this[0].id}"
-  description         = "Event rule for ASG upscale scheduler"
-  schedule_expression = var.asg_scheduler.upscale_cron_expression
+  count                        = var.asg_scheduler != null ? 1 : 0
+  name                         = "asg-scheduler-upscale-event-${random_id.this[0].id}"
+  description                  = "Event rule for ASG upscale scheduler"
+  schedule_expression          = var.asg_scheduler.upscale_cron_expression
+  schedule_expression_timezone = "Switzerland/Zurich"
 }
 
 resource "aws_lambda_permission" "allow_asg_upscale" {

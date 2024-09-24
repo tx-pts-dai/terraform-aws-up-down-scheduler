@@ -30,6 +30,7 @@ data "archive_file" "lambda_asg" {
 resource "aws_lambda_function" "lambda_asg" {
   count            = var.asg_scheduler != null ? 1 : 0
   function_name    = "ec2-asg-scheduler-${random_id.this[0].id}"
+  description      = var.asg_scheduler.description
   filename         = data.archive_file.lambda_asg[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_asg[0].output_path)
   handler          = "main.lambda_handler"
@@ -101,6 +102,7 @@ data "archive_file" "lambda_ec2_stop" {
 resource "aws_lambda_function" "lambda_ec2_stop" {
   count            = var.ec2_stop_scheduler != null ? 1 : 0
   function_name    = "ec2-stop-scheduler-${random_id.this[0].id}"
+  description      = var.ec2_stop_scheduler.description
   filename         = data.archive_file.lambda_ec2_stop[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_ec2_stop[0].output_path)
   handler          = "main.lambda_handler"
@@ -144,6 +146,7 @@ data "archive_file" "lambda_ec2_start" {
 resource "aws_lambda_function" "lambda_ec2_start" {
   count            = var.ec2_start_scheduler != null ? 1 : 0
   function_name    = "ec2-start-scheduler-${random_id.this[0].id}"
+  description      = var.ec2_start_scheduler.description
   filename         = data.archive_file.lambda_ec2_start[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_ec2_start[0].output_path)
   handler          = "main.lambda_handler"

@@ -43,7 +43,7 @@ resource "aws_lambda_function" "lambda_asg" {
 resource "aws_cloudwatch_event_rule" "asg_downscale_scheduler_event" {
   count               = var.asg_scheduler != null ? 1 : 0
   name                = "asg-scheduler-downscale-event-${random_id.this[0].id}"
-  description         = "Event rule for ASG downscale scheduler"
+  description         = "ASG downscale scheduler for ${var.asg_scheduler.asg_name}"
   schedule_expression = var.asg_scheduler.downscale_cron_expression
 }
 

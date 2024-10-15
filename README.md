@@ -113,9 +113,9 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_asg_scheduler"></a> [asg\_scheduler](#input\_asg\_scheduler) | The scheduler for updating ASG desired capacity | <pre>object({<br>    downscale_cron_expression  = string<br>    downscale_desired_capacity = number<br>    upscale_cron_expression    = string<br>    upscale_desired_capacity   = number<br>    asg_name                   = string<br>    description                = string<br>  })</pre> | `null` | no |
-| <a name="input_ec2_start_scheduler"></a> [ec2\_start\_scheduler](#input\_ec2\_start\_scheduler) | The scheduler for starting the EC2 instances | <pre>object({<br>    cron_expression = string<br>    instance_ids    = list(string)<br>    description     = string<br>  })</pre> | `null` | no |
-| <a name="input_ec2_stop_scheduler"></a> [ec2\_stop\_scheduler](#input\_ec2\_stop\_scheduler) | The scheduler for stopping the EC2 instances | <pre>object({<br>    cron_expression = string<br>    instance_ids    = list(string)<br>    description     = string<br>  })</pre> | `null` | no |
+| <a name="input_asg_scheduler"></a> [asg\_scheduler](#input\_asg\_scheduler) | The scheduler for updating ASG desired capacity | <pre>object({<br/>    downscale_cron_expression  = string<br/>    downscale_desired_capacity = number<br/>    upscale_cron_expression    = string<br/>    upscale_desired_capacity   = number<br/>    asg_name                   = string<br/>    description                = string<br/>  })</pre> | `null` | no |
+| <a name="input_ec2_start_scheduler"></a> [ec2\_start\_scheduler](#input\_ec2\_start\_scheduler) | The scheduler for starting the EC2 instances | <pre>object({<br/>    cron_expression = string<br/>    instance_ids    = list(string)<br/>    description     = optional(string, "")<br/>  })</pre> | `null` | no |
+| <a name="input_ec2_stop_scheduler"></a> [ec2\_stop\_scheduler](#input\_ec2\_stop\_scheduler) | The scheduler for stopping the EC2 instances | <pre>object({<br/>    cron_expression = string<br/>    instance_ids    = list(string)<br/>    description     = optional(string, "")<br/>  })</pre> | `null` | no |
 
 ## Outputs
 

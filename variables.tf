@@ -16,7 +16,7 @@ variable "ec2_stop_scheduler" {
   type = object({
     cron_expression = string
     instance_ids    = list(string)
-    description     = string
+    description     = optional(string, "")
   })
   default = null
 }
@@ -26,7 +26,7 @@ variable "ec2_start_scheduler" {
   type = object({
     cron_expression = string
     instance_ids    = list(string)
-    description     = string
+    description     = optional(string, "")
   })
   default = null
 }

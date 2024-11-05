@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  test_ec2_stop_lambda:
     runs-on: ubuntu-latest
 
     steps:

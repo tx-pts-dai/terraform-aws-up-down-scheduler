@@ -132,7 +132,8 @@ resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
   target_id = aws_lambda_function.lambda_ec2_stop[0].function_name
   arn       = aws_lambda_function.lambda_ec2_stop[0].arn
   input = jsonencode({
-    instance_ids = var.ec2_stop_scheduler.instance_ids
+    instance_ids   = var.ec2_stop_scheduler.instance_ids
+    patching_dates = var.ec2_stop_scheduler.patching_dates
   })
 }
 

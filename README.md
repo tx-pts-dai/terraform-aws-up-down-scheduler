@@ -55,7 +55,7 @@ The `pre-commit` command will run:
 
 as described in the `.pre-commit-config.yaml` file
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -122,7 +122,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_debug_ec2_scheduler"></a> [debug\_ec2\_scheduler](#output\_debug\_ec2\_scheduler) | scheduler ec2 |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## Authors
 

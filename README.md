@@ -2,6 +2,9 @@
 
 This Terraform module automates the scheduling of AWS Auto Scaling Group (ASG) scaling events and the start/stop scheduling of EC2 instances using AWS Lambda and Amazon CloudWatch Events. The module is designed to optimize resource management by automatically adjusting ASG capacities and controlling EC2 instance states based on predefined schedules.
 
+## Remark
+The EC2 stop function without ASG will not run on days that are previous of `patching_dates`. This ensures that instances are not stopped during a patching process. For EC2 instances with ASG, there are no such restrictions. `patching_dates` is optional.
+
 ## Usage
 
 You can use the module two ways:
@@ -25,6 +28,7 @@ module "ec2_start_stop_app_without_asg" {
   ec2_stop_scheduler  = {
     cron_expression = "0 17 * * MON-FRI"
     instance_ids    = ["i-xxxxxxxxxxxxx"]
+    patching_dates  = ["2024-02-01", "2024-02-04", "2024-07-02", "2024-10-01"]
   }
   ec2_start_scheduler = {
     cron_expression = "0 8 * * MON-FRI"

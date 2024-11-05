@@ -1,6 +1,7 @@
 import pytest
 from datetime import datetime
-from main import is_day_before_patching
+from lambda.ec2_simple.stop.main import is_day_before_patching
+
 
 test_dates = {
     "2024-01-01": True,  # day before patching

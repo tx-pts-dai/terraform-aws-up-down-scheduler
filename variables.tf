@@ -17,7 +17,6 @@ variable "ec2_stop_scheduler" {
     cron_expression = string
     instance_ids    = list(string)
     description     = optional(string, "")
-    exception_dates = optional(list(string), [])
   })
   default = null
 }

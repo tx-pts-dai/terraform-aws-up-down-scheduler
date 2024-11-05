@@ -1,0 +1,14 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: tx-pts-dai/github-workflows/.github/workflows/gh-release-on-main.yaml@v2

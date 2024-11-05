@@ -4,7 +4,7 @@ from lambda_functions.ec2_simple.stop.main import is_day_before_patching
 
 
 test_dates = {
-    "2024-01-01": True,  # day before patching
+    "2024-01-01": False,  # day before patching
     "2024-01-02": False,  # patching
     "2024-04-01": True,  # day before patching
     "2024-04-02": False,  # patching

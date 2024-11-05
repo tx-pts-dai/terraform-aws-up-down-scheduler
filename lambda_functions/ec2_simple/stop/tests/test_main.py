@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from lambda.ec2_simple.stop.main import is_day_before_patching
+from lambda_functions.ec2_simple.stop.main import is_day_before_patching
 
 
 test_dates = {

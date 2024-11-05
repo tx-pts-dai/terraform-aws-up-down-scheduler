@@ -23,8 +23,8 @@ locals {
 data "archive_file" "lambda_asg" {
   count       = var.asg_scheduler != null ? 1 : 0
   type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_asg/update_capacity"
-  output_path = "${path.module}/lambda/ec2_asg/update_capacity/package.zip"
+  source_dir  = "${path.module}/lambda_functions/ec2_asg/update_capacity"
+  output_path = "${path.module}/lambda_functions/ec2_asg/update_capacity/package.zip"
 }
 
 resource "aws_lambda_function" "lambda_asg" {
@@ -95,8 +95,8 @@ resource "aws_cloudwatch_event_target" "asg_upscale_scheduler_target" {
 data "archive_file" "lambda_ec2_stop" {
   count       = var.ec2_stop_scheduler != null ? 1 : 0
   type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_simple/stop"
-  output_path = "${path.module}/lambda/ec2_simple/stop/package.zip"
+  source_dir  = "${path.module}/lambda_functions/ec2_simple/stop"
+  output_path = "${path.module}/lambda_functions/ec2_simple/stop/package.zip"
 }
 
 resource "aws_lambda_function" "lambda_ec2_stop" {
@@ -139,8 +139,8 @@ resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
 data "archive_file" "lambda_ec2_start" {
   count       = var.ec2_start_scheduler != null ? 1 : 0
   type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_simple/start"
-  output_path = "${path.module}/lambda/ec2_simple/start/package.zip"
+  source_dir  = "${path.module}/lambda_functions/ec2_simple/start"
+  output_path = "${path.module}/lambda_functions/ec2_simple/start/package.zip"
 }
 
 resource "aws_lambda_function" "lambda_ec2_start" {
@@ -235,18 +235,18 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
 
 resource "aws_cloudwatch_log_group" "lambda_asg_log_group" {
   count             = var.asg_scheduler != null ? 1 : 0
-  name              = "/aws/lambda/ec2-asg-scheduler-${random_id.this[0].id}"
+  name              = "/aws/lambda_functions/ec2-asg-scheduler-${random_id.this[0].id}"
   retention_in_days = 14
 }
 
 resource "aws_cloudwatch_log_group" "lambda_ec2_stop_log_group" {
   count             = var.ec2_stop_scheduler != null ? 1 : 0
-  name              = "/aws/lambda/ec2-stop-scheduler-${random_id.this[0].id}"
+  name              = "/aws/lambda_functions/ec2-stop-scheduler-${random_id.this[0].id}"
   retention_in_days = 14
 }
 
 resource "aws_cloudwatch_log_group" "lambda_ec2_start_log_group" {
   count             = var.ec2_start_scheduler != null ? 1 : 0
-  name              = "/aws/lambda/ec2-start-scheduler-${random_id.this[0].id}"
+  name              = "/aws/lambda_functions/ec2-start-scheduler-${random_id.this[0].id}"
   retention_in_days = 14
 }

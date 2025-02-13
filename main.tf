@@ -81,7 +81,7 @@ resource "aws_iam_policy" "asg_scheduler" {
 
 resource "aws_scheduler_schedule" "asg_downscale_scheduler" {
   count = var.asg_scheduler != null ? 1 : 0
-  name  = "${random_id.this[0].id}-asg-downscales-schedule"
+  name  = "${random_id.this[0].id}-asg-downscale-schedule"
 
   flexible_time_window {
     mode = "OFF"
@@ -102,7 +102,7 @@ resource "aws_scheduler_schedule" "asg_downscale_scheduler" {
 
 resource "aws_scheduler_schedule" "asg_upscale_scheduler" {
   count = var.asg_scheduler != null ? 1 : 0
-  name  = "${random_id.this[0].id}-asg-upscalew-schedule"
+  name  = "${random_id.this[0].id}-asg-upscale-schedule"
 
   flexible_time_window {
     mode = "OFF"

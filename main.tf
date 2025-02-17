@@ -64,7 +64,7 @@ resource "aws_iam_role_policy_attachment" "asg_downscale_scheduler" {
 
 resource "aws_iam_policy" "asg_scheduler" {
   count = var.asg_scheduler != null ? 1 : 0
-  name  = "${random_id.this[0].id}-asg-scheduler"
+  name  = "asg-scheduler-${random_id.this[0].id}"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

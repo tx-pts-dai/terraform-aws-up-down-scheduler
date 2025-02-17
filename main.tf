@@ -102,7 +102,7 @@ resource "aws_scheduler_schedule" "asg_downscale_scheduler" {
 
 resource "aws_scheduler_schedule" "asg_upscale_scheduler" {
   count = var.asg_scheduler != null ? 1 : 0
-  name  = "${random_id.this[0].id}-asg-upscale-schedule"
+  name  = "asg-upscale-${random_id.this[0].id}"
 
   flexible_time_window {
     mode = "OFF"

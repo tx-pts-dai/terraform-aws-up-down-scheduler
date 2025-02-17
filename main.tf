@@ -41,7 +41,7 @@ resource "aws_lambda_function" "lambda_asg" {
 
 resource "aws_iam_role" "asg_scheduler" {
   count = var.asg_scheduler != null ? 1 : 0
-  name  = "${random_id.this[0].id}-asg-scheduler-role"
+  name  = "asg-scheduler-${random_id.this[0].id}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

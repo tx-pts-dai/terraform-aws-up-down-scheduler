@@ -81,7 +81,7 @@ resource "aws_iam_policy" "asg_scheduler" {
 
 resource "aws_scheduler_schedule" "asg_downscale_scheduler" {
   count = var.asg_scheduler != null ? 1 : 0
-  name  = "${random_id.this[0].id}-asg-downscale-schedule"
+  name  = "asg-downscale-${random_id.this[0].id}"
 
   flexible_time_window {
     mode = "OFF"

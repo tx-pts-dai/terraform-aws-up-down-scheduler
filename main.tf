@@ -182,7 +182,7 @@ resource "aws_iam_policy" "ec2_stop_scheduler" {
 
 resource "aws_scheduler_schedule" "ec2_stop_scheduler" {
   count = var.ec2_stop_scheduler != null ? 1 : 0
-  name  = "${random_id.this[0].id}-ec2-stop-schedule"
+  name  = "ec2-${random_id.this[0].id}-stop"
 
   flexible_time_window {
     mode = "OFF"

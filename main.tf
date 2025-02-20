@@ -142,7 +142,7 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
 
 resource "aws_iam_role" "ec2_stop_scheduler" {
   count = var.ec2_stop_scheduler != null ? 1 : 0
-  name  = "ec2-stop-scheduler-role-${random_id.this[0].id}"
+  name  = "ec2-stop-scheduler-${random_id.this[0].id}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

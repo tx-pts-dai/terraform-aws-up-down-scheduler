@@ -142,7 +142,7 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
 
 resource "aws_iam_role" "ec2_stop_scheduler" {
   count = var.ec2_stop_scheduler != null ? 1 : 0
-  name  = "${random_id.this[0].id}-ec2-stop-scheduler-role"
+  name  = "ec2-stop-scheduler-role-${random_id.this[0].id}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -244,7 +244,7 @@ resource "aws_iam_role_policy_attachment" "ec2_start_scheduler" {
 
 resource "aws_iam_policy" "ec2_start_scheduler" {
   count = var.ec2_start_scheduler != null ? 1 : 0
-  name  = "ec2-start-scheduler-${random_id.this[0].id}-"
+  name  = "ec2-start-scheduler-${random_id.this[0].id}"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

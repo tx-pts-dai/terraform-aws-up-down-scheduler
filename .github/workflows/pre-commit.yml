@@ -7,7 +7,7 @@ name: verify-pre-commit
 #   - Terraform validate with tflint
 #   - check for merge conflicts
 #   - fix end of files
-# 
+#
 # The preCommitMinVersions job will check that terraform validates with the minimum
 # allowed version of the module.
 # The preCommitMaxVersion job will check that terraform validates with the maximum
@@ -24,7 +24,7 @@ on:
       - 'renovate.json'
 
 env:
-  TERRAFORM_DOCS_VERSION: v0.16.0
+  TERRAFORM_DOCS_VERSION: v0.19.0
   TFLINT_VERSION: v0.44.1
 
 jobs:
@@ -54,7 +54,7 @@ jobs:
 
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@v1.3.1
+        uses: clowdhaus/terraform-min-max@v1.3.2
         with:
           directory: ${{ matrix.directory }}
 
@@ -89,7 +89,7 @@ jobs:
 
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@v1.3.1
+        uses: clowdhaus/terraform-min-max@v1.3.2
 
       - name: Pre-commit Terraform ${{ steps.minMax.outputs.maxVersion }}
         uses: clowdhaus/terraform-composite-actions/pre-commit@v1.11.1

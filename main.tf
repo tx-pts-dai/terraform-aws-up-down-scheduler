@@ -39,57 +39,86 @@ resource "aws_lambda_function" "lambda_asg" {
   timeout          = 30
 }
 
-
-resource "aws_cloudwatch_event_rule" "asg_downscale_scheduler_event" {
-  count               = var.asg_scheduler != null ? 1 : 0
-  name                = "asg-scheduler-downscale-event-${random_id.this[0].id}"
-  description         = "ASG downscale scheduler for ${var.asg_scheduler.asg_name}"
-  schedule_expression = var.asg_scheduler.downscale_cron_expression
-}
-
-resource "aws_lambda_permission" "allow_asg_downscale" {
-  count         = var.asg_scheduler != null ? 1 : 0
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_asg[0].function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.asg_downscale_scheduler_event[0].arn
-}
-
-resource "aws_cloudwatch_event_target" "asg_downscale_scheduler_target" {
-  count     = var.asg_scheduler != null ? 1 : 0
-  rule      = aws_cloudwatch_event_rule.asg_downscale_scheduler_event[0].name
-  target_id = aws_lambda_function.lambda_asg[0].function_name
-  arn       = aws_lambda_function.lambda_asg[0].arn
-  input = jsonencode({
-    asg_name         = var.asg_scheduler.asg_name
-    desired_capacity = var.asg_scheduler.downscale_desired_capacity
+resource "aws_iam_role" "asg_scheduler" {
+  count = var.asg_scheduler != null ? 1 : 0
+  name  = "asg-scheduler-${random_id.this[0].id}"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = ["scheduler.amazonaws.com"]
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
   })
 }
 
-resource "aws_cloudwatch_event_rule" "asg_upscale_scheduler_event" {
-  count               = var.asg_scheduler != null ? 1 : 0
-  name                = "asg-scheduler-upscale-event-${random_id.this[0].id}"
-  description         = "Event rule for ASG upscale scheduler"
-  schedule_expression = var.asg_scheduler.upscale_cron_expression
+resource "aws_iam_role_policy_attachment" "asg_downscale_scheduler" {
+  count      = var.asg_scheduler != null ? 1 : 0
+  policy_arn = aws_iam_policy.asg_scheduler[0].arn
+  role       = aws_iam_role.asg_scheduler[0].name
 }
 
-resource "aws_lambda_permission" "allow_asg_upscale" {
-  count         = var.asg_scheduler != null ? 1 : 0
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_asg[0].function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.asg_upscale_scheduler_event[0].arn
-}
-
-resource "aws_cloudwatch_event_target" "asg_upscale_scheduler_target" {
-  count     = var.asg_scheduler != null ? 1 : 0
-  rule      = aws_cloudwatch_event_rule.asg_upscale_scheduler_event[0].name
-  target_id = aws_lambda_function.lambda_asg[0].function_name
-  arn       = aws_lambda_function.lambda_asg[0].arn
-  input = jsonencode({
-    asg_name         = var.asg_scheduler.asg_name
-    desired_capacity = var.asg_scheduler.upscale_desired_capacity
+resource "aws_iam_policy" "asg_scheduler" {
+  count = var.asg_scheduler != null ? 1 : 0
+  name  = "asg-scheduler-${random_id.this[0].id}"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = [aws_lambda_function.lambda_asg[0].arn]
+      }
+    ]
   })
+}
+
+resource "aws_scheduler_schedule" "asg_downscale_scheduler" {
+  count = var.asg_scheduler != null ? 1 : 0
+  name  = "asg-downscale-${random_id.this[0].id}"
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression          = var.asg_scheduler.downscale_cron_expression
+  schedule_expression_timezone = "Europe/Zurich"
+
+  target {
+    arn      = aws_lambda_function.lambda_asg[0].arn
+    role_arn = aws_iam_role.asg_scheduler[0].arn
+    input = jsonencode({
+      asg_name         = var.asg_scheduler.asg_name
+      desired_capacity = var.asg_scheduler.downscale_desired_capacity
+    })
+  }
+}
+
+resource "aws_scheduler_schedule" "asg_upscale_scheduler" {
+  count = var.asg_scheduler != null ? 1 : 0
+  name  = "asg-upscale-${random_id.this[0].id}"
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression          = var.asg_scheduler.upscale_cron_expression
+  schedule_expression_timezone = "Europe/Zurich"
+
+  target {
+    arn      = aws_lambda_function.lambda_asg[0].arn
+    role_arn = aws_iam_role.asg_scheduler[0].arn
+    input = jsonencode({
+      asg_name         = var.asg_scheduler.asg_name
+      desired_capacity = var.asg_scheduler.upscale_desired_capacity
+    })
+  }
 }
 
 data "archive_file" "lambda_ec2_stop" {
@@ -111,29 +140,64 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
   timeout          = 30
 }
 
-resource "aws_cloudwatch_event_rule" "ec2_stop_scheduler_event" {
-  count               = var.ec2_stop_scheduler != null ? 1 : 0
-  name                = "ec2-stop-scheduler-event-${random_id.this[0].id}"
-  description         = "Event rule for EC2 stop scheduler"
-  schedule_expression = var.ec2_stop_scheduler.cron_expression
-}
-
-resource "aws_lambda_permission" "allow_ec2_stop" {
-  count         = var.ec2_stop_scheduler != null ? 1 : 0
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_ec2_stop[0].function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.ec2_stop_scheduler_event[0].arn
-}
-
-resource "aws_cloudwatch_event_target" "ec2_stop_scheduler_target" {
-  count     = var.ec2_stop_scheduler != null ? 1 : 0
-  rule      = aws_cloudwatch_event_rule.ec2_stop_scheduler_event[0].name
-  target_id = aws_lambda_function.lambda_ec2_stop[0].function_name
-  arn       = aws_lambda_function.lambda_ec2_stop[0].arn
-  input = jsonencode({
-    instance_ids = var.ec2_stop_scheduler.instance_ids
+resource "aws_iam_role" "ec2_stop_scheduler" {
+  count = var.ec2_stop_scheduler != null ? 1 : 0
+  name  = "ec2-stop-scheduler-${random_id.this[0].id}"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = ["scheduler.amazonaws.com"]
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_stop_scheduler" {
+  count      = var.ec2_stop_scheduler != null ? 1 : 0
+  policy_arn = aws_iam_policy.ec2_stop_scheduler[0].arn
+  role       = aws_iam_role.ec2_stop_scheduler[0].name
+}
+
+resource "aws_iam_policy" "ec2_stop_scheduler" {
+  count = var.ec2_stop_scheduler != null ? 1 : 0
+  name  = "ec2-stop-scheduler-${random_id.this[0].id}"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = [aws_lambda_function.lambda_ec2_stop[0].arn]
+      }
+    ]
+  })
+}
+
+resource "aws_scheduler_schedule" "ec2_stop_scheduler" {
+  count = var.ec2_stop_scheduler != null ? 1 : 0
+  name  = "ec2-stop-${random_id.this[0].id}"
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression          = var.ec2_stop_scheduler.cron_expression
+  schedule_expression_timezone = "Europe/Zurich"
+
+  target {
+    arn      = aws_lambda_function.lambda_ec2_stop[0].arn
+    role_arn = aws_iam_role.ec2_stop_scheduler[0].arn
+    input = jsonencode({
+      instance_ids = var.ec2_stop_scheduler.instance_ids
+    })
+  }
 }
 
 data "archive_file" "lambda_ec2_start" {
@@ -155,29 +219,64 @@ resource "aws_lambda_function" "lambda_ec2_start" {
   timeout          = 30
 }
 
-resource "aws_cloudwatch_event_rule" "ec2_start_scheduler_event" {
-  count               = var.ec2_start_scheduler != null ? 1 : 0
-  name                = "ec2-start-scheduler-event-${random_id.this[0].id}"
-  description         = "Event rule for EC2 start scheduler"
-  schedule_expression = var.ec2_start_scheduler.cron_expression
-}
-
-resource "aws_lambda_permission" "allow_ec2_start" {
-  count         = var.ec2_start_scheduler != null ? 1 : 0
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_ec2_start[0].function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.ec2_start_scheduler_event[0].arn
-}
-
-resource "aws_cloudwatch_event_target" "ec2_start_scheduler_target" {
-  count     = var.ec2_start_scheduler != null ? 1 : 0
-  rule      = aws_cloudwatch_event_rule.ec2_start_scheduler_event[0].name
-  target_id = aws_lambda_function.lambda_ec2_start[0].function_name
-  arn       = aws_lambda_function.lambda_ec2_start[0].arn
-  input = jsonencode({
-    instance_ids = var.ec2_start_scheduler.instance_ids
+resource "aws_iam_role" "ec2_start_scheduler" {
+  count = var.ec2_start_scheduler != null ? 1 : 0
+  name  = "ec2-start-${random_id.this[0].id}"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = ["scheduler.amazonaws.com"]
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_start_scheduler" {
+  count      = var.ec2_start_scheduler != null ? 1 : 0
+  policy_arn = aws_iam_policy.ec2_start_scheduler[0].arn
+  role       = aws_iam_role.ec2_start_scheduler[0].name
+}
+
+resource "aws_iam_policy" "ec2_start_scheduler" {
+  count = var.ec2_start_scheduler != null ? 1 : 0
+  name  = "ec2-start-scheduler-${random_id.this[0].id}"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = [aws_lambda_function.lambda_ec2_start[0].arn]
+      }
+    ]
+  })
+}
+
+resource "aws_scheduler_schedule" "ec2_start_scheduler" {
+  count = var.ec2_start_scheduler != null ? 1 : 0
+  name  = "ec2-start-${random_id.this[0].id}"
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression          = var.ec2_start_scheduler.cron_expression
+  schedule_expression_timezone = "Europe/Zurich"
+
+  target {
+    arn      = aws_lambda_function.lambda_ec2_start[0].arn
+    role_arn = aws_iam_role.ec2_start_scheduler[0].arn
+    input = jsonencode({
+      instance_ids = var.ec2_start_scheduler.instance_ids
+    })
+  }
 }
 
 resource "random_id" "this" {

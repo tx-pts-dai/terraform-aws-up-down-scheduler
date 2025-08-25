@@ -34,7 +34,7 @@ resource "aws_lambda_function" "lambda_asg" {
   filename         = data.archive_file.lambda_asg[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_asg[0].output_path)
   handler          = "main.lambda_handler"
-  runtime          = "python3.8"
+  runtime          = "python3.12"
   role             = aws_iam_role.lambda_role[0].arn
   timeout          = 30
 }
@@ -135,7 +135,7 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
   filename         = data.archive_file.lambda_ec2_stop[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_ec2_stop[0].output_path)
   handler          = "main.lambda_handler"
-  runtime          = "python3.8"
+  runtime          = "python3.12"
   role             = aws_iam_role.lambda_role[0].arn
   timeout          = 30
 }
@@ -214,7 +214,7 @@ resource "aws_lambda_function" "lambda_ec2_start" {
   filename         = data.archive_file.lambda_ec2_start[0].output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_ec2_start[0].output_path)
   handler          = "main.lambda_handler"
-  runtime          = "python3.8"
+  runtime          = "python3.12"
   role             = aws_iam_role.lambda_role[0].arn
   timeout          = 30
 }

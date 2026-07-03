@@ -42,14 +42,28 @@ mock_provider "random" {}
 override_data {
   target = data.aws_iam_policy_document.lambda_role_policy
   values = {
-    json = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"sts:AssumeRole\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}]}"
+    json = jsonencode({
+      Version = "2012-10-17"
+      Statement = [{
+        Effect    = "Allow"
+        Action    = "sts:AssumeRole"
+        Principal = { Service = "lambda.amazonaws.com" }
+      }]
+    })
   }
 }
 
 override_data {
   target = data.aws_iam_policy_document.ec2_scheduler_policy
   values = {
-    json = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"ec2:StartInstances\",\"ec2:StopInstances\"],\"Resource\":\"*\"}]}"
+    json = jsonencode({
+      Version = "2012-10-17"
+      Statement = [{
+        Effect   = "Allow"
+        Action   = ["ec2:StartInstances", "ec2:StopInstances"]
+        Resource = "*"
+      }]
+    })
   }
 }
 

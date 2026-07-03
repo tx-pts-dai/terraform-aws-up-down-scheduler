@@ -1,22 +1,7 @@
-# Contract/smoke tests for the up/down scheduler module.
-#
-# AWS and random are mocked so the tests run offline with no credentials.
-# The `archive` provider is intentionally NOT mocked so the real
-# `archive_file` data sources zip the `lambda/` sources and
-# `filebase64sha256(...)` computes a real hash — the same path a real plan
-# takes.
-#
-# NOTE: these tests do not reproduce the working-directory `filename` drift
-# fixed in FUM-4170. That drift only appears when Terraform is invoked from
-# different data dirs (local checkout vs Atlantis `/tmp/terraform-data-dir/`),
-# which `terraform test` cannot vary, so an idempotency check would pass with
-# or without the `ignore_changes = [filename]` fix. These are contract tests
-# that assert the module wires the Lambda functions up correctly.
+# aws/random are mocked so the suite runs offline; archive is left real so
+# archive_file zips the lambda sources and source_code_hash is computed.
 
-# The mocked aws provider generates random strings for computed `arn`
-# attributes, which fail the provider's ARN-format validation when they are
-# fed into `role` / `policy_arn`. Provide valid mock ARNs for the IAM
-# resources so the graph applies.
+# Mock ARNs so the provider's ARN-format validation passes on role/policy_arn.
 mock_provider "aws" {
   mock_resource "aws_iam_role" {
     defaults = {
@@ -36,9 +21,7 @@ mock_provider "aws" {
 }
 mock_provider "random" {}
 
-# The mocked aws provider also stubs the `aws_iam_policy_document` data
-# sources, which would return empty `json` and fail the IAM policy JSON
-# validation. Override them with valid (representative) policy JSON.
+# Valid policy JSON so IAM policy validation passes (mocked docs return empty).
 override_data {
   target = data.aws_iam_policy_document.lambda_role_policy
   values = {
@@ -67,8 +50,6 @@ override_data {
   }
 }
 
-# All three schedulers enabled -> all three Lambda functions exist and are
-# configured with the expected runtime/handler and a real source_code_hash.
 run "all_schedulers_enabled" {
   command = apply
 
@@ -126,8 +107,6 @@ run "all_schedulers_enabled" {
     error_message = "all Lambdas should use the main.lambda_handler entrypoint"
   }
 
-  # source_code_hash is what actually detects real code changes; it must be
-  # populated from the archived package for every Lambda.
   assert {
     condition = alltrue([
       aws_lambda_function.lambda_asg[0].source_code_hash != "",
@@ -138,8 +117,6 @@ run "all_schedulers_enabled" {
   }
 }
 
-# Only the ec2 stop scheduler enabled -> only that Lambda exists; the asg and
-# start Lambdas are not created.
 run "only_ec2_stop_enabled" {
   command = apply
 

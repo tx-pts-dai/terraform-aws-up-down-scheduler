@@ -39,12 +39,7 @@ resource "aws_lambda_function" "lambda_asg" {
   timeout          = 30
 
   lifecycle {
-    # `filename` embeds `path.module`, which resolves to different strings
-    # (relative vs absolute) depending on the runner's working directory
-    # (e.g. local checkout vs Atlantis `/tmp/terraform-data-dir/`). This
-    # causes spurious in-place updates. `source_code_hash` already detects
-    # real code changes, so ignore the path-derived `filename`. Ignoring
-    # `filename` also stops the dependent `last_modified` churn.
+    # filename embeds path.module, which varies by working dir; source_code_hash detects real changes
     ignore_changes = [filename]
   }
 }
@@ -150,12 +145,7 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
   timeout          = 30
 
   lifecycle {
-    # `filename` embeds `path.module`, which resolves to different strings
-    # (relative vs absolute) depending on the runner's working directory
-    # (e.g. local checkout vs Atlantis `/tmp/terraform-data-dir/`). This
-    # causes spurious in-place updates. `source_code_hash` already detects
-    # real code changes, so ignore the path-derived `filename`. Ignoring
-    # `filename` also stops the dependent `last_modified` churn.
+    # filename embeds path.module, which varies by working dir; source_code_hash detects real changes
     ignore_changes = [filename]
   }
 }
@@ -239,12 +229,7 @@ resource "aws_lambda_function" "lambda_ec2_start" {
   timeout          = 30
 
   lifecycle {
-    # `filename` embeds `path.module`, which resolves to different strings
-    # (relative vs absolute) depending on the runner's working directory
-    # (e.g. local checkout vs Atlantis `/tmp/terraform-data-dir/`). This
-    # causes spurious in-place updates. `source_code_hash` already detects
-    # real code changes, so ignore the path-derived `filename`. Ignoring
-    # `filename` also stops the dependent `last_modified` churn.
+    # filename embeds path.module, which varies by working dir; source_code_hash detects real changes
     ignore_changes = [filename]
   }
 }

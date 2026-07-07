@@ -112,7 +112,7 @@ jobs:
         uses: clowdhaus/terraform-min-max@v1.3.2
 
       - name: Setup Terraform ${{ steps.minMax.outputs.maxVersion }}
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: ${{ steps.minMax.outputs.maxVersion }}
 

@@ -28,3 +28,6 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+
+# Lambda deployment packages built by the archive_file data sources on plan/apply/test
+lambda/**/package.zip

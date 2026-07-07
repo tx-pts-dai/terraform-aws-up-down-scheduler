@@ -37,6 +37,11 @@ resource "aws_lambda_function" "lambda_asg" {
   runtime          = "python3.12"
   role             = aws_iam_role.lambda_role[0].arn
   timeout          = 30
+
+  lifecycle {
+    # filename embeds path.module, which varies by working dir; source_code_hash detects real changes
+    ignore_changes = [filename]
+  }
 }
 
 resource "aws_iam_role" "asg_scheduler" {
@@ -138,6 +143,11 @@ resource "aws_lambda_function" "lambda_ec2_stop" {
   runtime          = "python3.12"
   role             = aws_iam_role.lambda_role[0].arn
   timeout          = 30
+
+  lifecycle {
+    # filename embeds path.module, which varies by working dir; source_code_hash detects real changes
+    ignore_changes = [filename]
+  }
 }
 
 resource "aws_iam_role" "ec2_stop_scheduler" {
@@ -217,6 +227,11 @@ resource "aws_lambda_function" "lambda_ec2_start" {
   runtime          = "python3.12"
   role             = aws_iam_role.lambda_role[0].arn
   timeout          = 30
+
+  lifecycle {
+    # filename embeds path.module, which varies by working dir; source_code_hash detects real changes
+    ignore_changes = [filename]
+  }
 }
 
 resource "aws_iam_role" "ec2_start_scheduler" {

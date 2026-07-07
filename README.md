@@ -59,7 +59,7 @@ as described in the `.pre-commit-config.yaml` file
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_archive"></a> [archive](#requirement\_archive) | ~> 2.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
@@ -68,7 +68,7 @@ as described in the `.pre-commit-config.yaml` file
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_archive"></a> [archive](#provider\_archive) | ~> 2.0 |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | ~> 3.0 |
@@ -80,7 +80,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_cloudwatch_log_group.lambda_asg_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_group.lambda_ec2_start_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_group.lambda_ec2_stop_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
@@ -113,7 +113,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_asg_scheduler"></a> [asg\_scheduler](#input\_asg\_scheduler) | The scheduler for updating ASG desired capacity | <pre>object({<br/>    downscale_cron_expression  = string<br/>    downscale_desired_capacity = number<br/>    upscale_cron_expression    = string<br/>    upscale_desired_capacity   = number<br/>    asg_name                   = string<br/>    description                = optional(string, "")<br/>  })</pre> | `null` | no |
 | <a name="input_ec2_start_scheduler"></a> [ec2\_start\_scheduler](#input\_ec2\_start\_scheduler) | The scheduler for starting the EC2 instances | <pre>object({<br/>    cron_expression = string<br/>    instance_ids    = list(string)<br/>    description     = optional(string, "")<br/>  })</pre> | `null` | no |
 | <a name="input_ec2_stop_scheduler"></a> [ec2\_stop\_scheduler](#input\_ec2\_stop\_scheduler) | The scheduler for stopping the EC2 instances | <pre>object({<br/>    cron_expression = string<br/>    instance_ids    = list(string)<br/>    description     = optional(string, "")<br/>  })</pre> | `null` | no |
@@ -121,7 +121,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_debug_ec2_scheduler"></a> [debug\_ec2\_scheduler](#output\_debug\_ec2\_scheduler) | scheduler ec2 |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

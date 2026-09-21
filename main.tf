@@ -24,7 +24,7 @@ data "archive_file" "lambda_asg" {
   count       = var.asg_scheduler != null ? 1 : 0
   type        = "zip"
   source_dir  = "${path.module}/lambda/ec2_asg/update_capacity"
-  output_path = "${path.module}/lambda/ec2_asg/update_capacity/package.zip"
+  output_path = "${path.module}/dist/ec2_asg_update_capacity.zip"
 }
 
 resource "aws_lambda_function" "lambda_asg" {
@@ -130,7 +130,7 @@ data "archive_file" "lambda_ec2_stop" {
   count       = var.ec2_stop_scheduler != null ? 1 : 0
   type        = "zip"
   source_dir  = "${path.module}/lambda/ec2_simple/stop"
-  output_path = "${path.module}/lambda/ec2_simple/stop/package.zip"
+  output_path = "${path.module}/dist/ec2_simple_stop.zip"
 }
 
 resource "aws_lambda_function" "lambda_ec2_stop" {
@@ -214,7 +214,7 @@ data "archive_file" "lambda_ec2_start" {
   count       = var.ec2_start_scheduler != null ? 1 : 0
   type        = "zip"
   source_dir  = "${path.module}/lambda/ec2_simple/start"
-  output_path = "${path.module}/lambda/ec2_simple/start/package.zip"
+  output_path = "${path.module}/dist/ec2_simple_start.zip"
 }
 
 resource "aws_lambda_function" "lambda_ec2_start" {

@@ -21,10 +21,12 @@ locals {
 }
 
 data "archive_file" "lambda_asg" {
-  count       = var.asg_scheduler != null ? 1 : 0
-  type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_asg/update_capacity"
-  output_path = "${path.module}/dist/ec2_asg_update_capacity.zip"
+  count      = var.asg_scheduler != null ? 1 : 0
+  type       = "zip"
+  source_dir = "${path.module}/lambda/ec2_asg/update_capacity"
+  # output_path must stay inside source_dir; filename is pinned by ignore_changes
+  output_path = "${path.module}/lambda/ec2_asg/update_capacity/package.zip"
+  excludes    = ["package.zip"]
 }
 
 resource "aws_lambda_function" "lambda_asg" {
@@ -127,10 +129,12 @@ resource "aws_scheduler_schedule" "asg_upscale_scheduler" {
 }
 
 data "archive_file" "lambda_ec2_stop" {
-  count       = var.ec2_stop_scheduler != null ? 1 : 0
-  type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_simple/stop"
-  output_path = "${path.module}/dist/ec2_simple_stop.zip"
+  count      = var.ec2_stop_scheduler != null ? 1 : 0
+  type       = "zip"
+  source_dir = "${path.module}/lambda/ec2_simple/stop"
+  # output_path must stay inside source_dir; filename is pinned by ignore_changes
+  output_path = "${path.module}/lambda/ec2_simple/stop/package.zip"
+  excludes    = ["package.zip"]
 }
 
 resource "aws_lambda_function" "lambda_ec2_stop" {
@@ -211,10 +215,12 @@ resource "aws_scheduler_schedule" "ec2_stop_scheduler" {
 }
 
 data "archive_file" "lambda_ec2_start" {
-  count       = var.ec2_start_scheduler != null ? 1 : 0
-  type        = "zip"
-  source_dir  = "${path.module}/lambda/ec2_simple/start"
-  output_path = "${path.module}/dist/ec2_simple_start.zip"
+  count      = var.ec2_start_scheduler != null ? 1 : 0
+  type       = "zip"
+  source_dir = "${path.module}/lambda/ec2_simple/start"
+  # output_path must stay inside source_dir; filename is pinned by ignore_changes
+  output_path = "${path.module}/lambda/ec2_simple/start/package.zip"
+  excludes    = ["package.zip"]
 }
 
 resource "aws_lambda_function" "lambda_ec2_start" {

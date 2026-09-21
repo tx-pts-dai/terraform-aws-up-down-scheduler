@@ -30,4 +30,4 @@ override.tf.json
 # example: *tfplan*
 
 # Lambda deployment packages built by the archive_file data sources on plan/apply/test
-dist/
+lambda/**/package.zip
